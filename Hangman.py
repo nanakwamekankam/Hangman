@@ -24,19 +24,26 @@ def run_event_loop(letters, word):
     t = turtle.Turtle()
     turns = 6
     failed = 0
+    passed = 0
     guesses = []
+    word_completion = ["_" for letter in letters]
 
-    while turns > 0 and failed < 6:
+    while turns != 0 and passed != len(letters) and failed != 6:
         guess = input("Letter: ")
         guess = guess.lower().strip()
 
         if not guess or not guess.strip():
             print("Words are made up of letters")
-        elif guess in letters:
+
+        if guess in letters:
             if guess in guesses:
                 print("Oops. Looks like you already guessed that.")
             else:
-                print([guess if guess == letter else '_' for letter in letters])
+                for i in range(len(letters)):
+                    if letters[i] == guess:
+                        word_completion[i] = guess
+                        passed += 1
+                        print(word_completion)
         else:
             failed += 1
             turns -= 1
@@ -44,7 +51,11 @@ def run_event_loop(letters, word):
             functions.steps_hangman(t, turns+1)
         guesses.append(guess)
 
-    print(f"Sorry. The word was {word.upper()}. You loose")
+    print()
+    if turns == 0 and failed == 6:
+        print(f"Sorry. The word was {word.upper()}. You loose")
+    if passed == len(letters):
+        print(f"Yep, you guessed it. The word was {word.upper()}")
 
 
 if __name__ == '__main__':
